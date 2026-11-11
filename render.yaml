@@ -1,30 +1,31 @@
-# Render.com deployment configuration
-# Aurora University - BDF Lab 03 REST API
-# Student: A.VENKATA SAI (252U1R5010)
+# ===========================================================================
+# Render.com Deployment Configuration
+# BDF Lab 03 REST API — Aurora University | A.VENKATA SAI (252U1R5010)
+# ===========================================================================
 #
-# This file configures Render to:
-#   1. Use Node.js 22 LTS (avoids GLIBC_2.38 requirement)
-#   2. Build sqlite3 from source (avoids prebuilt binary GLIBC mismatch)
-#   3. Configure all required environment variables
+# PRIMARY DEPLOYMENT: Docker (node:22-bookworm-slim)
+# This is the most reliable option because:
+#   - sqlite3@6.0.1 uses prebuild-install (downloads prebuilt GLIBC_2.38 binaries)
+#   - Docker builds sqlite3 from source inside the EXACT same container it runs in
+#   - npm_config_build_from_source=true instructs prebuild-install to compile from src
+#
+# ALTERNATIVE (if Docker is not desired): Use the native Node service below.
+# ===========================================================================
 
 services:
+  # -------------------------------------------------------------------------
+  # OPTION 1: Docker Service (PRIMARY - Guaranteed GLIBC compatibility)
+  # -------------------------------------------------------------------------
   - type: web
     name: bdf-lab-03-rest-api
-    runtime: node
+    runtime: docker
     region: singapore
     plan: free
-    rootDir: backend
 
-    # Node.js version - MUST be 22 LTS to stay within GLIBC_2.35 compatibility
-    # Render uses this to select the Node.js runtime version.
-    # Do NOT use >=18 (Render selects Node 26 which needs GLIBC_2.38)
-    nodeVersion: 22.11.0
-
-    # Build from source to compile sqlite3 native binary
-    # in Render's exact Linux environment (no GLIBC mismatch)
-    buildCommand: npm install --build-from-source
-
-    startCommand: npm start
+    # Dockerfile location relative to repo root
+    dockerfilePath: backend/Dockerfile
+    # Build context = backend/ folder
+    dockerContext: backend
 
     envVars:
       - key: NODE_ENV
