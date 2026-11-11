@@ -1,0 +1,22 @@
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-error.log*
+
+# Environment variables — NEVER commit secrets
+.env
+backend/.env
+
+# SQLite database — regenerated at startup by seed logic
+backend/data/*.db
+
+# Python scripts (used for report generation only, not needed for deployment)
+generate_report.py
+backend/generate-screenshots.py
+
+# macOS / Windows system files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log

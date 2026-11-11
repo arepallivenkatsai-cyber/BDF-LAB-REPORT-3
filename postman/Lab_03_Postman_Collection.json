@@ -1,0 +1,402 @@
+{
+  "info": {
+    "_postman_id": "bdf-lab-03-rest-api-venkatsai",
+    "name": "BDF Lab 03 - REST API, Query Parameters, Validation and Debugging",
+    "description": "Comprehensive Postman test collection for Aurora University - Backend Development Fundamentals - Lab 03.\nStudent: A.VENKATA SAI (252U1R5010)\nCovers resource-based REST routing, query parameter filtering (LIKE search), sorting, pagination, price range filters, request validation, HTTP status codes, and error responses.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3000",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "01 - GET All Books",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/books",
+          "host": ["{{base_url}}"],
+          "path": ["books"]
+        },
+        "description": "Retrieves the collection of all books with default pagination and sorting (id ASC)."
+      },
+      "response": []
+    },
+    {
+      "name": "02 - GET Books with search_q (LIKE Search)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/books?search_q=JavaScript",
+          "host": ["{{base_url}}"],
+          "path": ["books"],
+          "query": [
+            {
+              "key": "search_q",
+              "value": "JavaScript",
+              "description": "Performs case-insensitive partial title matching using SQL LIKE"
+            }
+          ]
+        },
+        "description": "Filters books whose title contains the substring 'JavaScript'."
+      },
+      "response": []
+    },
+    {
+      "name": "03 - GET Books with Ascending Sorting",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/books?order_by=price&order=ASC",
+          "host": ["{{base_url}}"],
+          "path": ["books"],
+          "query": [
+            {
+              "key": "order_by",
+              "value": "price"
+            },
+            {
+              "key": "order",
+              "value": "ASC"
+            }
+          ]
+        },
+        "description": "Sorts books by price in ascending order."
+      },
+      "response": []
+    },
+    {
+      "name": "04 - GET Books with Descending Sorting",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/books?order_by=price&order=DESC",
+          "host": ["{{base_url}}"],
+          "path": ["books"],
+          "query": [
+            {
+              "key": "order_by",
+              "value": "price"
+            },
+            {
+              "key": "order",
+              "value": "DESC"
+            }
+          ]
+        },
+        "description": "Sorts books by price in descending order."
+      },
+      "response": []
+    },
+    {
+      "name": "05 - GET Books with Limit and Offset",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/books?limit=3&offset=2",
+          "host": ["{{base_url}}"],
+          "path": ["books"],
+          "query": [
+            {
+              "key": "limit",
+              "value": "3"
+            },
+            {
+              "key": "offset",
+              "value": "2"
+            }
+          ]
+        },
+        "description": "Paginates the book collection skipping 2 records and returning up to 3 records."
+      },
+      "response": []
+    },
+    {
+      "name": "06 - GET Books with Minimum Price Filter",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/books?min_price=40",
+          "host": ["{{base_url}}"],
+          "path": ["books"],
+          "query": [
+            {
+              "key": "min_price",
+              "value": "40"
+            }
+          ]
+        },
+        "description": "Filters books with price greater than or equal to 40."
+      },
+      "response": []
+    },
+    {
+      "name": "07 - GET Books with Maximum Price Filter",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/books?max_price=30",
+          "host": ["{{base_url}}"],
+          "path": ["books"],
+          "query": [
+            {
+              "key": "max_price",
+              "value": "30"
+            }
+          ]
+        },
+        "description": "Filters books with price less than or equal to 30."
+      },
+      "response": []
+    },
+    {
+      "name": "08 - GET Books with Price Range (BETWEEN)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/books?min_price=25&max_price=42",
+          "host": ["{{base_url}}"],
+          "path": ["books"],
+          "query": [
+            {
+              "key": "min_price",
+              "value": "25"
+            },
+            {
+              "key": "max_price",
+              "value": "42"
+            }
+          ]
+        },
+        "description": "Filters books within a bounded price range using parameterized BETWEEN condition."
+      },
+      "response": []
+    },
+    {
+      "name": "09 - POST Valid Book",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Mastering Full-Stack Development\",\n  \"author\": \"Joel Prashanth D\",\n  \"price\": 49.99\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/books",
+          "host": ["{{base_url}}"],
+          "path": ["books"]
+        },
+        "description": "Creates a new book entity. Returns HTTP 201 Created."
+      },
+      "response": []
+    },
+    {
+      "name": "10 - POST Validation - Missing Title (400)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"author\": \"Joel Prashanth D\",\n  \"price\": 49.99\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/books",
+          "host": ["{{base_url}}"],
+          "path": ["books"]
+        },
+        "description": "Fails validation when title is missing. Returns HTTP 400 Bad Request."
+      },
+      "response": []
+    },
+    {
+      "name": "11 - POST Validation - Missing Author (400)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Book Without Author\",\n  \"price\": 29.99\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/books",
+          "host": ["{{base_url}}"],
+          "path": ["books"]
+        },
+        "description": "Fails validation when author is missing. Returns HTTP 400 Bad Request."
+      },
+      "response": []
+    },
+    {
+      "name": "12 - POST Validation - Invalid Price (400)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Free Open Source Software Guide\",\n  \"author\": \"Richard Stallman\",\n  \"price\": \"free_of_cost\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/books",
+          "host": ["{{base_url}}"],
+          "path": ["books"]
+        },
+        "description": "Fails validation when price is non-numeric string. Returns HTTP 400 Bad Request."
+      },
+      "response": []
+    },
+    {
+      "name": "13 - PUT Existing Book (200)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Mastering Full-Stack Development (2nd Edition)\",\n  \"author\": \"Joel Prashanth D\",\n  \"price\": 54.99\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/books/1",
+          "host": ["{{base_url}}"],
+          "path": ["books", "1"]
+        },
+        "description": "Updates an existing book resource. Returns HTTP 200 OK."
+      },
+      "response": []
+    },
+    {
+      "name": "14 - PUT Nonexistent Book (404)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Ghost Book\",\n  \"author\": \"Nobody\",\n  \"price\": 99.00\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/books/99999",
+          "host": ["{{base_url}}"],
+          "path": ["books", "99999"]
+        },
+        "description": "Attempts update on non-existent resource ID. Returns HTTP 404 Not Found."
+      },
+      "response": []
+    },
+    {
+      "name": "15 - DELETE Existing Book (200)",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/books/11",
+          "host": ["{{base_url}}"],
+          "path": ["books", "11"]
+        },
+        "description": "Deletes an existing book resource. Returns HTTP 200 OK."
+      },
+      "response": []
+    },
+    {
+      "name": "16 - DELETE Nonexistent Book (404)",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/books/99999",
+          "host": ["{{base_url}}"],
+          "path": ["books", "99999"]
+        },
+        "description": "Attempts deletion on non-existent resource ID. Returns HTTP 404 Not Found."
+      },
+      "response": []
+    },
+    {
+      "name": "17 - Test Invalid Sorting Parameters (400)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/books?order_by=hacked_col&order=RANDOM",
+          "host": ["{{base_url}}"],
+          "path": ["books"],
+          "query": [
+            {
+              "key": "order_by",
+              "value": "hacked_col"
+            },
+            {
+              "key": "order",
+              "value": "RANDOM"
+            }
+          ]
+        },
+        "description": "Tests allowlist protection against invalid or malicious sorting columns. Returns HTTP 400 Bad Request."
+      },
+      "response": []
+    },
+    {
+      "name": "18 - Test Invalid Pagination Parameters (400)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/books?limit=-5&offset=abc",
+          "host": ["{{base_url}}"],
+          "path": ["books"],
+          "query": [
+            {
+              "key": "limit",
+              "value": "-5"
+            },
+            {
+              "key": "offset",
+              "value": "abc"
+            }
+          ]
+        },
+        "description": "Tests validation against non-numeric or negative pagination values. Returns HTTP 400 Bad Request."
+      },
+      "response": []
+    }
+  ]
+}
