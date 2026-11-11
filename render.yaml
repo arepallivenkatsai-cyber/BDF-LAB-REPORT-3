@@ -1,0 +1,33 @@
+# Render.com deployment configuration
+# Aurora University - BDF Lab 03 REST API
+# Student: A.VENKATA SAI (252U1R5010)
+#
+# This file configures Render to:
+#   1. Use Node.js 22 LTS (avoids GLIBC_2.38 requirement)
+#   2. Build sqlite3 from source (avoids prebuilt binary GLIBC mismatch)
+#   3. Configure all required environment variables
+
+services:
+  - type: web
+    name: bdf-lab-03-rest-api
+    runtime: node
+    region: singapore
+    plan: free
+    rootDir: backend
+
+    # Node.js version - MUST be 22 LTS to stay within GLIBC_2.35 compatibility
+    # Render uses this to select the Node.js runtime version.
+    # Do NOT use >=18 (Render selects Node 26 which needs GLIBC_2.38)
+    nodeVersion: 22.11.0
+
+    # Build from source to compile sqlite3 native binary
+    # in Render's exact Linux environment (no GLIBC mismatch)
+    buildCommand: npm install --build-from-source
+
+    startCommand: npm start
+
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DB_PATH
+        value: /var/data/books.db
